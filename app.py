@@ -639,29 +639,22 @@ with tab2:
         end_year=int(end_pred)
     )
 
-    historical_for_chart = df[df["Kabupaten/Kota"] == selected_city][[
-        "Tahun",
-        "Kabupaten/Kota",
-        "Timbulan Sampah Tahunan(ton)"
-    ]].rename(columns={"Timbulan Sampah Tahunan(ton)": "Volume"})
-    historical_for_chart["Tipe"] = "Historis"
-
+    # ---------------------------------------------------
+    # PERUBAHAN: grafik hanya menampilkan garis PREDIKSI
+    # (garis historis dihilangkan dari grafik ini)
+    # ---------------------------------------------------
     prediction_for_chart = pred_df[[
         "Tahun",
         "Kabupaten/Kota",
         "Prediksi Timbulan Sampah Tahunan(ton)"
     ]].rename(columns={"Prediksi Timbulan Sampah Tahunan(ton)": "Volume"})
-    prediction_for_chart["Tipe"] = "Prediksi"
-
-    chart_df = pd.concat([historical_for_chart, prediction_for_chart], ignore_index=True)
 
     fig_pred = px.line(
-        chart_df,
+        prediction_for_chart,
         x="Tahun",
         y="Volume",
-        color="Tipe",
         markers=True,
-        title=f"Historis vs Prediksi - {selected_city}",
+        title=f"Prediksi - {selected_city}",
         labels={"Volume": "Ton/Tahun"}
     )
     fig_pred.update_traces(line=dict(width=4), marker=dict(size=9))
